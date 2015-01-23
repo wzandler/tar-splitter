@@ -10,7 +10,7 @@
 
 usage() 
 {
-    echo "Usage: $0 [-h] <source_directory/> <destination_directory/>"
+    echo "Usage: $0 [-h] <source_directory/> <destination_directory/> <tar chunk sizes (in bytes)>"
     exit 2
 }
 
@@ -20,22 +20,22 @@ if [ $# = 0 ]; then
 elif [ $1 == "-h" ] || [ $1 == "--help" ]; then
     usage
 	
-elif [ $# != 2 ]; then
-    usage
+# elif [ $# -lt 3 ] || [$# -gt 3]; then
+#     usage
 
 else
 
 	src_dir=$1
 	dst_dir=$2
-	breakSize=5242880
+	chunkSize=${3:-5242880}
 
-	MBcount=100
+	echo $chunkSize
+
+	MBcount=3
 	threshBytes=$((1024 * $MBcount))
 
 	# grab bite sizes from src dir
 	du -s ${src_dir}* > /tmp/dus
-
-	# cat /tmp/dus
 
 	# read line by line
 	while read line
@@ -52,12 +52,12 @@ else
 			echo small
 			# echo ${dst_dir}${fileName}
 			# echo ${filePath}
-			tar -jcf ${dst_dir}${fileName}.tar. ${filePath}
+			tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
 
 		else 
 			# split tar the big files
 			echo big
-			tar -jcf - ${filePath} | split -b $breakSize - ${dst_dir}${fileName}_parts.tar.bz2 
+			tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2 
 
 		fi
 
@@ -66,10 +66,8 @@ else
 
 	done < "/tmp/dus"
 
-
-
 	# remove tmp file
-	# rm -rf /tmp/dus
+	rm -rf /tmp/dus 
 
 
 fi
