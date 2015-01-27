@@ -25,12 +25,11 @@ else
 	src_dir=$1
 	dst_dir=$2
 
-	# Default tar chunk size is 5 MB
-	chunkSize=${3:-5242880}
+	# Default tar chunk size is 4 GB
+	chunkSize=${3:-4294967296}
 
 	# File size threshold for spliting or not splitting the tar
-	MBcount=3
-	threshBytes=$((1024 * $MBcount))
+	threshBytes=4294967296
 
 	echo "File Size Threshold: ${threshBytes} bytes"
 	echo "Tar Parts Size: ${chunkSize} bytes"
