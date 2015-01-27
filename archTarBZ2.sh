@@ -74,6 +74,6 @@ else
 	endTime=$(date +%s);
 	diff=$(($endTime-$startTime))
 	echo "Total Runtime: $(($diff / 60)) minutes and $(($diff % 60)) seconds."
+	) >& $dst_dir/tar-split-log.$(date +%Y%m%d.%H%M)
 
-
-fi ) >& $dst_dir/tar-split-log.$(date +%Y%m%d.%H%M)
+fi 
