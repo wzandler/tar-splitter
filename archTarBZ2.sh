@@ -10,70 +10,75 @@ usage()
 
 if [ $# = 0 ]; then
 	usage
+	exit 0
+fi
 	
-elif [ $1 == "-h" ] || [ $1 == "--help" ]; then
+if [ $1 == "-h" ] || [ $1 == "--help" ]; then
     usage
-	
-elif [ $# -gt 3 ]; then
-    usage
+    exit 0	
+fi
 
-else
-	( echo $0 starting at $(date)
-	startTime=$(date +%s);
-	
-	# Set source and destination vars
-	src_dir=$1
-	dst_dir=$2
+# Set source and destination vars
+src_dir=$1
+dst_dir=$2
 
-	# Default tar chunk size is 4 GB
-	chunkSize=${3:-4294967296}
+# Default tar chunk size is 4 GB
+chunkSize=${3:-4294967296}
 
-	# File size threshold for spliting or not splitting the tar
-	threshBytes=4294967296
+# File size threshold for spliting or not splitting the tar
+threshBytes=4294967296
 
-	echo "File Size Threshold: ${threshBytes} bytes"
-	echo "Tar Parts Size: ${chunkSize} bytes"
+# echo "File Size Threshold: ${threshBytes} bytes"
+# echo "Tar Parts Size: ${chunkSize} bytes"
 
-	# grab bite sizes from src dir
-	echo "==== Building File List =================="
-	du -s ${src_dir}* > /tmp/dus
-	echo "==== Building File List Complete ==================" 
 
-	# read line by line
-	echo "==== Begin Taring All Files ========================"
-	while read line
-	do
-		# split into file size and name
-		size=$(echo $line | cut -f 1 -d ' ' )
-		filePath=$(echo $line | cut -f 2- -d ' ')
-		fileName=$(echo $filePath | cut -f 2- -d '/')
+(
+	echo $0 starting at $(date)
+startTime=$(date +%s);
 
-		if [ "$size" -lt "$threshBytes" ]; then
-			# tar the small file to destination
-			echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
-			tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
-			echo "==== ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
-		else 
-			# split tar the big files
-			echo "==== ${fileName} Split Taring Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
-			echo tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
-			echo "==== ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
+# grab bite sizes from src dir
+echo "==== Building File List =================="
+du -s ${src_dir}* > /tmp/dus
+echo "==== Building File List Complete ==================" 
 
-		fi
+# read line by line
+echo "==== Begin Taring All Files ========================"
+while read line
+do
+	# split into file size and name
+	size=$(echo $line | cut -f 1 -d ' ' )
+	filePath=$(echo $line | cut -f 2- -d ' ')
+	fileName=$(echo $filePath | cut -f 2- -d '/')
 
-	done < "/tmp/dus"
-	
-	echo "==== All tars completed at $(date +%Y\/%m\/%d\ %H\:%M) ====================" 
+	if [ "$size" -lt "$threshBytes" ]; then
+		# tar the small file to destination
+		echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
+		tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
+		echo "==== ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
-	# remove tmp file
-	rm -rf /tmp/dus 
-	echo "Temp Files Removed"
+	else 
+		# split tar the big files
+		echo "==== ${fileName} Split Taring Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
+		echo tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
+		echo "==== ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
-	# Calculate run time
-	endTime=$(date +%s);
-	diff=$(($endTime-$startTime))
-	echo "Total Runtime: $(($diff / 60)) minutes and $(($diff % 60)) seconds."
-	) >& $dst_dir/tar-split-log.$(date +%Y%m%d.%H%M)
+	fi
 
-fi 
+done < "/tmp/dus"
+
+echo "==== All tars completed at $(date +%Y\/%m\/%d\ %H\:%M) ====================" 
+
+# remove tmp file
+rm -rf /tmp/dus 
+echo "Temp Files Removed"
+
+# Calculate run time
+endTime=$(date +%s)
+diff=$(($endTime-$startTime))
+echo "Done at $(date +%Y\/%m\/%d\ %H\:%M)"
+echo "Time Elapsed: $(($diff / 60)) minutes and $(($diff % 60)) seconds."
+
+) &>${dst_dir}/tar-split-log-$(date +%Y%m%d.%H%M)
+
+
