@@ -32,7 +32,7 @@ threshBytes=4294967296
 # echo "Tar Parts Size: ${chunkSize} bytes"
 
 
-# (
+(
 	echo $0 starting at $(date)
 startTime=$(date +%s);
 
@@ -79,6 +79,6 @@ diff=$(($endTime-$startTime))
 echo "Done at $(date +%Y\/%m\/%d\ %H\:%M)"
 echo "Time Elapsed: $(($diff / 60)) minutes and $(($diff % 60)) seconds."
 
-# ) &>${dst_dir}/tar-split-log-$(date +%Y%m%d.%H%M)
+) &>${dst_dir}/tar-split-log-$(date +%Y%m%d.%H%M)
 
 
