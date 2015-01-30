@@ -48,7 +48,7 @@ do
 	# split into file size and name
 	size=$(echo $line | cut -f 1 -d ' ' )
 	filePath=$(echo $line | cut -f 2- -d ' ')
-	fileName=$(echo $filePath | rev | cut -f 1 -d '/')
+	fileName=$(echo $filePath | rev | cut -f 1 -d '/' | rev)
 
 	if [ "$size" -lt "$threshBytes" ]; then
 		# tar the small file to destination
