@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# write untar script for recompiling 
+du 
 
 usage() 
 {
@@ -33,13 +33,13 @@ threshBytes=4294967296
 
 
 (
-	echo $0 starting at $(date)
+echo $0 starting at $(date)
 startTime=$(date +%s);
 
 
 # grab bite sizes from src dir
 echo "==== Building File List =================="
-du -s ${src_dir}* > /tmp/dus
+du -sb ${src_dir}* > /tmp/dus
 echo "==== Building File List Complete ==================" 
 
 # read line by line
