@@ -32,7 +32,7 @@ threshBytes=4294967296
 # echo "Tar Parts Size: ${chunkSize} bytes"
 
 
-(
+# (
 	echo $0 starting at $(date)
 startTime=$(date +%s);
 
@@ -49,7 +49,7 @@ do
 	# split into file size and name
 	size=$(echo $line | cut -f 1 -d ' ' )
 	filePath=$(echo $line | cut -f 2- -d ' ')
-	fileName=$(echo $filePath | cut -f 2- -d '/')
+	fileName=$(echo $filePath | rev | cut -f 1 -d '/')
 
 	if [ "$size" -lt "$threshBytes" ]; then
 		# tar the small file to destination
@@ -79,6 +79,6 @@ diff=$(($endTime-$startTime))
 echo "Done at $(date +%Y\/%m\/%d\ %H\:%M)"
 echo "Time Elapsed: $(($diff / 60)) minutes and $(($diff % 60)) seconds."
 
-) &>${dst_dir}/tar-split-log-$(date +%Y%m%d.%H%M)
+# ) &>${dst_dir}/tar-split-log-$(date +%Y%m%d.%H%M)
 
 
