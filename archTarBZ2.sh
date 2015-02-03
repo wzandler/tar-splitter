@@ -50,7 +50,12 @@ do
 	filePath=$(echo $line | cut -f 2- -d ' ')
 	fileName=$(echo $filePath | rev | cut -f 1 -d '/' | rev)
 
+	echo "size:     ${size}"
+	echo "filePath: ${filePath}"
+	echo "fileName: ${fileName}"
+
 	if [ "$size" -lt "$threshBytes" ]; then
+		echo "**************  SMALL FILE/FOLDER Regular tar ********************"
 		# tar the small file to destination
 		echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
 		tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
@@ -58,6 +63,7 @@ do
 
 	else 
 		# split tar the big files
+		echo "************* LARGE FILE/FOLDER  Split tar ****************"
 		echo "==== ${fileName} Split Taring Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
 		echo tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
 		echo "==== ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
