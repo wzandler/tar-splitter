@@ -21,11 +21,11 @@ fi
 src_dir=$1
 dst_dir=$2
 
-# Default tar chunk size is 4 GB
-chunkSize=${3:-4294967296}
+# Default tar chunk size is 3.9 GB
+chunkSize=${3:-4187593113}
 
 # File size threshold for spliting or not splitting the tar
-threshBytes=102457600
+threshBytes=4294967296
 
 # echo "File Size Threshold: ${threshBytes} bytes"
 # echo "Tar Parts Size: ${chunkSize} bytes"
@@ -39,7 +39,7 @@ startTime=$(date +%s);
 # grab bite sizes from src dir
 echo "==== Building File List =================="
 du -sb ${src_dir}* > /tmp/dus
-echo "==== Building File List Complete ==================" 
+echo "**** Building File List Complete *********" 
 
 # read line by line
 echo "==== Begin Taring All Files ========================"
@@ -50,30 +50,23 @@ do
 	filePath=$(echo $line | cut -f 2- -d ' ')
 	fileName=$(echo $filePath | rev | cut -f 1 -d '/' | rev)
 
-	echo "**************** NEW FILE ********************"
-	
-	echo 
-
 	if [ "$size" -lt "$threshBytes" ]; then
-		echo "${fileName} SMALL FILE/FOLDER Regular tar"
 		# tar the small file to destination
-		echo "==== ${fileName} Taring Started to ${dst_dir}${fileName} at $(date +%Y\/%m\/%d\ %H\:%M)"
+		echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
 		tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
-		echo "==== ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
+		echo "**** ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
 	else 
 		# split tar the big files
-		echo "LARGE FILE/FOLDER  Split tar"
-		# echo "==== ${fileName} Split Taring to ${dst_dir}${fileName}_parts.tar.bz2 Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
-		echo "***** do command: tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2 ****"
-		echo tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
-		echo "==== ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
+		echo "==== ${fileName} Split Taring Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
+		tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
+		echo "**** ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
 	fi
 
 done < "/tmp/dus"
 
-echo "==== All tars completed at $(date +%Y\/%m\/%d\ %H\:%M) ====================" 
+echo "**** All tars completed at $(date +%Y\/%m\/%d\ %H\:%M) ****************" 
 
 # remove tmp file
 rm -rf /tmp/dus 
