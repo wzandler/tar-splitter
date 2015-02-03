@@ -64,7 +64,8 @@ do
 	else 
 		# split tar the big files
 		echo "LARGE FILE/FOLDER  Split tar"
-		echo "==== ${fileName} Split Taring to {dst_dir}${fileName}_parts.tar.bz2 Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
+		# echo "==== ${fileName} Split Taring to ${dst_dir}${fileName}_parts.tar.bz2 Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
+		echo "***** do command: tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2 ****"
 		echo tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
 		echo "==== ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
