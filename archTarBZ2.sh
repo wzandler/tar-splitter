@@ -50,6 +50,12 @@ do
 	filePath=$(echo $line | cut -f 2- -d ' ')
 	fileName=$(echo $filePath | rev | cut -f 1 -d '/' | rev)
 
+	# if block check 
+	# if file in xargs ls (it exists) prompt if you want to re-tar
+	# use prompt from backupgroom
+
+
+
 	if [ "$size" -lt "$threshBytes" ]; then
 		# tar the small file to destination
 		echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
