@@ -25,7 +25,7 @@ dst_dir=$2
 chunkSize=${3:-4294967296}
 
 # File size threshold for spliting or not splitting the tar
-threshBytes=4294967296
+threshBytes=102457600
 
 # echo "File Size Threshold: ${threshBytes} bytes"
 # echo "Tar Parts Size: ${chunkSize} bytes"
@@ -50,21 +50,21 @@ do
 	filePath=$(echo $line | cut -f 2- -d ' ')
 	fileName=$(echo $filePath | rev | cut -f 1 -d '/' | rev)
 
-	echo "size:     ${size}"
-	echo "filePath: ${filePath}"
-	echo "fileName: ${fileName}"
+	echo "**************** NEW FILE ********************"
+	
+	echo 
 
 	if [ "$size" -lt "$threshBytes" ]; then
-		echo "**************  SMALL FILE/FOLDER Regular tar ********************"
+		echo "${fileName} SMALL FILE/FOLDER Regular tar"
 		# tar the small file to destination
-		echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
+		echo "==== ${fileName} Taring Started to ${dst_dir}${fileName} at $(date +%Y\/%m\/%d\ %H\:%M)"
 		tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
 		echo "==== ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
 	else 
 		# split tar the big files
-		echo "************* LARGE FILE/FOLDER  Split tar ****************"
-		echo "==== ${fileName} Split Taring Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
+		echo "LARGE FILE/FOLDER  Split tar"
+		echo "==== ${fileName} Split Taring to {dst_dir}${fileName}_parts.tar.bz2 Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
 		echo tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
 		echo "==== ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
