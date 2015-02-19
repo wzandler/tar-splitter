@@ -3,7 +3,7 @@
 
 usage() 
 {
-    echo "Usage: $0 [-h] <source_directory/> <destination_directory/> <tar chunk sizes (in bytes)>"
+    echo "Usage: $0 [-h] <source_directory/> <destination_directory/> <optional: tar chunk sizes (in bytes)>"
     exit 2
 }
 
@@ -53,7 +53,7 @@ do
 	# if block check 
 		
 	if [ -f  ${dst_dir}${fileName}.tar.bz2 ] || [ -f ${dst_dir}${filePath}_parts.tar.bz2aa ]; then
-		echo "==== {fileName} Tar exists, skipping tar"
+		echo "==== ${fileName} Tar exists, skipping archive"
 		# if file in xargs ls (it exists) prompt if you want to re-tar
 		# use prompt from backupgroom
 
