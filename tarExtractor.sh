@@ -1,6 +1,6 @@
 #!/bin/bash
 
-// Take tar file from input and unarchive to destination
+#Take tar file from input and unarchive to destination
 
 
 usage() 
