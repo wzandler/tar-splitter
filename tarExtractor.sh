@@ -5,7 +5,7 @@
 
 usage() 
 {
-    echo "Usage: $0 [-h] <path_to_backup> <destination_directory/>"
+    echo "Usage: $0 [-h] <path_to_backup, do not include * > <destination_directory/>"
     exit 2
 }
 
