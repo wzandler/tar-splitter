@@ -53,14 +53,14 @@ do
 	# if block check 
 		
 	if [ -f  ${dst_dir}${fileName}.tar.bz2 ] || [ -f ${dst_dir}${filePath}_parts.tar.bz2aa ]; then
-		echo "==== ${fileName} Tar exists, skipping archive"
+		echo "---- ${fileName} Tar exists, skipping archive"
 		# if file in xargs ls (it exists) prompt if you want to re-tar
 		# use prompt from backupgroom
 
 	else
 		if [ "$size" -lt "$threshBytes" ]; then
 			# tar the small file to destination
-			echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
+			echo "++++ ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
 			tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
 			echo "**** ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
