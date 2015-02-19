@@ -5,7 +5,7 @@
 
 usage() 
 {
-    echo "Usage: $0 [-h] <path_to_backup, include * > <destination_directory/>"
+    echo "Usage: $0 [-h] <path_to_backup> <destination_directory/>"
     exit 2
 }
 
@@ -22,6 +22,6 @@ fi
 ext_file=$1
 dst_dir=$2
 
-cat $ext_file | tar -jxf - -C $dst_dir --strip-components=1
+cat $ext_file* | tar -jxf - -C $dst_dir --strip-components=1
 
 exit 0
