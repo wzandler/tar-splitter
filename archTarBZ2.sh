@@ -52,7 +52,7 @@ do
 	echo 
 	# if block check 
 		
-	if [ -f  ${dst_dir}${fileName}.tar.bz2 ] || [ -f ${dst_dir}${filePath}_parts.tar.bz2aa ]
+	if [ -f  ${dst_dir}${fileName}.tar.bz2 ] || [ -f ${dst_dir}${filePath}_parts.tar.bz2aa ]; then
 		echo "==== {fileName} Tar exists, skipping tar"
 		# if file in xargs ls (it exists) prompt if you want to re-tar
 		# use prompt from backupgroom
@@ -71,6 +71,8 @@ do
 			echo "**** ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
 		fi
+
+	fi
 
 done < "/tmp/dus"
 
