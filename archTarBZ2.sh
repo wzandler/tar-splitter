@@ -3,7 +3,7 @@
 
 usage() 
 {
-    echo "Usage: $0 [-h] <source_directory/> <destination_directory/> <optional: tar chunk sizes (in bytes)>"
+    echo "Usage: $0 [-h] <source_directory/> <destination_directory/>  optional: <tar chunk sizes (in bytes)> <size threshold>"
     exit 2
 }
 
@@ -25,7 +25,7 @@ dst_dir=$2
 chunkSize=${3:-4187593113}
 
 # File size threshold for spliting or not splitting the tar
-threshBytes=4294967296
+threshBytes=${4:-4294967296}
 
 # echo "File Size Threshold: ${threshBytes} bytes"
 # echo "Tar Parts Size: ${chunkSize} bytes"
