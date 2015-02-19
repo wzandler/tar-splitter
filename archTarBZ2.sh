@@ -36,7 +36,7 @@ echo $0 starting at $(date)
 startTime=$(date +%s);
 
 
-# grab bite sizes from src dir
+# grab byte sizes from src dir
 echo "==== Building File List =================="
 du -sb ${src_dir}* > /tmp/dus
 echo "**** Building File List Complete *********" 
@@ -49,26 +49,28 @@ do
 	size=$(echo $line | cut -f 1 -d ' ' )
 	filePath=$(echo $line | cut -f 2- -d ' ')
 	fileName=$(echo $filePath | rev | cut -f 1 -d '/' | rev)
-
+	echo 
 	# if block check 
-	# if file in xargs ls (it exists) prompt if you want to re-tar
-	# use prompt from backupgroom
+		
+	if [ -f  ${dst_dir}${fileName}.tar.bz2 ] || [ -f ${dst_dir}${filePath}_parts.tar.bz2aa ]
+		echo "==== {fileName} Tar exists, skipping tar"
+		# if file in xargs ls (it exists) prompt if you want to re-tar
+		# use prompt from backupgroom
 
+	else
+		if [ "$size" -lt "$threshBytes" ]; then
+			# tar the small file to destination
+			echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
+			tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
+			echo "**** ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
+		else 
+			# split tar the big files
+			echo "==== ${fileName} Split Taring Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
+			tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
+			echo "**** ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
 
-	if [ "$size" -lt "$threshBytes" ]; then
-		# tar the small file to destination
-		echo "==== ${fileName} Taring Started at $(date +%Y\/%m\/%d\ %H\:%M)"
-		tar -jcf ${dst_dir}${fileName}.tar.bz2 ${filePath}
-		echo "**** ${fileName} Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
-
-	else 
-		# split tar the big files
-		echo "==== ${fileName} Split Taring Starting at $(date +%Y\/%m\/%d\ %H\:%M)"
-		tar -jcf - ${filePath} | split -b $chunkSize - ${dst_dir}${fileName}_parts.tar.bz2
-		echo "**** ${fileName} Split Taring Finished at $(date +%Y\/%m\/%d\ %H\:%M)"
-
-	fi
+		fi
 
 done < "/tmp/dus"
 
