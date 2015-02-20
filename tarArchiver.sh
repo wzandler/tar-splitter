@@ -19,7 +19,7 @@ while [ "$1" != "" ]; do
 		-s | --source)		shift
 							src_dir=$1
 							;;
-		-d | --destination) shif
+		-d | --destination) shift
 							dst_dir=$1
 							;;
 		-k | --chunk) 		shift
