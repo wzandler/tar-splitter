@@ -9,9 +9,9 @@ usage()
 
 
 # Default tar chunk size is 3.9 GB
-chunk=4187593113
+chunkSize=4187593113
 # Default file size threshold splitting
-thresh=4294967296
+threshBytes=4294967296
 
 # Deal with flags
 while [ "$1" != "" ]; do
@@ -23,12 +23,12 @@ while [ "$1" != "" ]; do
 							dst_dir=$1
 							;;
 		-k | --chunk) 		shift
-							chunk=$1
+							chunkSize=$1
 							;;
 		-t | --thresh)		shift
-							thresh=$1
+							threshBytes=$1
 							;;
-		-z | --gzip)		shift
+		-gz | --gzip)		shift
 							arch_type=$1
 							ext="gz"
 							;;
